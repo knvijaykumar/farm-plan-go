@@ -1,0 +1,12 @@
+REVOKE ALL ON FUNCTION public.has_role(uuid, public.app_role) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.has_role(uuid, public.app_role) TO authenticated;
+REVOKE ALL ON FUNCTION public.is_officer(uuid) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.is_officer(uuid) TO authenticated;
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.list_slots(uuid, date) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.list_slots(uuid, date) TO anon, authenticated;
+REVOKE ALL ON FUNCTION public.book_slot(uuid, text, numeric) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.book_slot(uuid, text, numeric) TO authenticated;
+REVOKE ALL ON FUNCTION public.cancel_booking(uuid) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.cancel_booking(uuid) TO authenticated;
