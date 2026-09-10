@@ -14,16 +14,269 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          booking_code: string
+          center_id: string
+          created_at: string
+          crop: string
+          farmer_id: string
+          id: string
+          notes: string | null
+          quantity_kg: number
+          recorded_weight_kg: number | null
+          slot_id: string
+          status: Database["public"]["Enums"]["booking_status"]
+          token_number: number
+          updated_at: string
+        }
+        Insert: {
+          booking_code: string
+          center_id: string
+          created_at?: string
+          crop: string
+          farmer_id: string
+          id?: string
+          notes?: string | null
+          quantity_kg: number
+          recorded_weight_kg?: number | null
+          slot_id: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          token_number?: number
+          updated_at?: string
+        }
+        Update: {
+          booking_code?: string
+          center_id?: string
+          created_at?: string
+          crop?: string
+          farmer_id?: string
+          id?: string
+          notes?: string | null
+          quantity_kg?: number
+          recorded_weight_kg?: number | null
+          slot_id?: string
+          status?: Database["public"]["Enums"]["booking_status"]
+          token_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_center_id_fkey"
+            columns: ["center_id"]
+            isOneToOne: false
+            referencedRelation: "centers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      centers: {
+        Row: {
+          address: string
+          avg_minutes_per_farmer: number
+          closes_at: string
+          code: string
+          created_at: string
+          crops: string[]
+          district: string
+          id: string
+          is_active: boolean
+          name: string
+          opens_at: string
+          slot_capacity: number
+          slot_minutes: number
+        }
+        Insert: {
+          address?: string
+          avg_minutes_per_farmer?: number
+          closes_at?: string
+          code: string
+          created_at?: string
+          crops?: string[]
+          district: string
+          id?: string
+          is_active?: boolean
+          name: string
+          opens_at?: string
+          slot_capacity?: number
+          slot_minutes?: number
+        }
+        Update: {
+          address?: string
+          avg_minutes_per_farmer?: number
+          closes_at?: string
+          code?: string
+          created_at?: string
+          crops?: string[]
+          district?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          opens_at?: string
+          slot_capacity?: number
+          slot_minutes?: number
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          district: string
+          full_name: string
+          id: string
+          phone: string
+          updated_at: string
+          village: string
+        }
+        Insert: {
+          created_at?: string
+          district?: string
+          full_name?: string
+          id: string
+          phone?: string
+          updated_at?: string
+          village?: string
+        }
+        Update: {
+          created_at?: string
+          district?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          updated_at?: string
+          village?: string
+        }
+        Relationships: []
+      }
+      slots: {
+        Row: {
+          booked_count: number
+          capacity: number
+          center_id: string
+          end_time: string
+          id: string
+          slot_date: string
+          start_time: string
+        }
+        Insert: {
+          booked_count?: number
+          capacity?: number
+          center_id: string
+          end_time: string
+          id?: string
+          slot_date: string
+          start_time: string
+        }
+        Update: {
+          booked_count?: number
+          capacity?: number
+          center_id?: string
+          end_time?: string
+          id?: string
+          slot_date?: string
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "slots_center_id_fkey"
+            columns: ["center_id"]
+            isOneToOne: false
+            referencedRelation: "centers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      book_slot: {
+        Args: { _crop: string; _quantity_kg: number; _slot_id: string }
+        Returns: {
+          booking_code: string
+          center_id: string
+          created_at: string
+          crop: string
+          farmer_id: string
+          id: string
+          notes: string | null
+          quantity_kg: number
+          recorded_weight_kg: number | null
+          slot_id: string
+          status: Database["public"]["Enums"]["booking_status"]
+          token_number: number
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "bookings"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      cancel_booking: { Args: { _booking_id: string }; Returns: undefined }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_officer: { Args: { _user_id: string }; Returns: boolean }
+      list_slots: {
+        Args: { _center_id: string; _date: string }
+        Returns: {
+          booked_count: number
+          capacity: number
+          center_id: string
+          end_time: string
+          id: string
+          slot_date: string
+          start_time: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "slots"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "farmer" | "staff" | "admin"
+      booking_status:
+        | "booked"
+        | "verified"
+        | "in_queue"
+        | "weighing"
+        | "completed"
+        | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +403,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["farmer", "staff", "admin"],
+      booking_status: [
+        "booked",
+        "verified",
+        "in_queue",
+        "weighing",
+        "completed",
+        "cancelled",
+      ],
+    },
   },
 } as const
