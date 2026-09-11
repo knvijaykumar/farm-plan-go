@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.list_slots(uuid, date) FROM anon;
