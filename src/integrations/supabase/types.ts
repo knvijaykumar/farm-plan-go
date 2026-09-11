@@ -241,14 +241,6 @@ export type Database = {
         }
       }
       cancel_booking: { Args: { _booking_id: string }; Returns: undefined }
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_officer: { Args: { _user_id: string }; Returns: boolean }
       list_slots: {
         Args: { _center_id: string; _date: string }
         Returns: {
@@ -266,6 +258,13 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      queue_info: {
+        Args: { _booking_id: string }
+        Returns: {
+          ahead: number
+          est_minutes: number
+        }[]
       }
     }
     Enums: {
